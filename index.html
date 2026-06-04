@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manuel Nicholas — Oracle APEX & Frontend Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#080b10;--bg2:#0d1117;--bg3:#131920;--bg4:#1a2330;--border:rgba(99,179,237,0.08);--border2:rgba(99,179,237,0.18);--text:#e8edf2;--text2:#7a8fa3;--text3:#3d5066;--accent:#63b3ed;--accent2:#4299e1;--accent3:#bee3f8;--gold:#f6c90e;--green:#68d391;--dim:rgba(99,179,237,0.08);--glow:rgba(99,179,237,0.12);--font-h:'Cabinet Grotesk',sans-serif;--font-s:'Fraunces',serif;--font-m:'Fira Code',monospace}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-h);line-height:1.6;overflow-x:hidden;cursor:none}
+#cur{position:fixed;width:8px;height:8px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .15s,height .15s;mix-blend-mode:screen}
+#cur2{position:fixed;width:32px;height:32px;border:1px solid rgba(99,179,237,0.35);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .3s,height .3s,opacity .3s}
+body *:not(#cur):not(#cur2){cursor:none}
+#cur.big{width:16px;height:16px}#cur2.big{width:52px;height:52px;opacity:.5}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:900;opacity:.25;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.08'/%3E%3C/svg%3E")}
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:1.4rem 5vw;display:flex;align-items:center;justify-content:space-between;background:rgba(8,11,16,0.8);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);transition:padding .3s}
+nav.s{padding:.9rem 5vw}
+.logo{font-family:var(--font-m);font-size:.85rem;font-weight:500;color:var(--text);text-decoration:none;letter-spacing:.04em}
+.logo span{color:var(--accent)}
+.nav-r{display:flex;gap:2rem;align-items:center}
+.nav-r a{font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text2);text-decoration:none;transition:color .2s;position:relative}
+.nav-r a::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1px;background:var(--accent);transition:width .3s}
+.nav-r a:hover{color:var(--accent)}.nav-r a:hover::after{width:100%}
+.nav-cta{padding:.45rem 1.1rem;border:1px solid var(--border2);border-radius:2px;color:var(--accent) !important;font-size:.72rem !important}
+.nav-cta:hover{background:var(--dim) !important}.nav-cta::after{display:none !important}
+.mob-btn{display:none;background:none;border:1px solid var(--border2);color:var(--text2);padding:.4rem .6rem;font-size:1rem;border-radius:2px}
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 5vw 6rem;position:relative;overflow:hidden}
+#three-canvas{position:absolute;top:0;right:0;width:55%;height:100%;pointer-events:auto;z-index:2}
+.hero-content{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:flex-end;height:100%}
+.drag-hint{position:absolute;top:50%;right:calc(55% / 2);transform:translate(50%,-50%);font-family:var(--font-m);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);display:flex;flex-direction:column;align-items:center;gap:.4rem;pointer-events:none;animation:fIn 1.5s 2s both;z-index:3}
+.drag-hint-icon{width:28px;height:28px;border:1px solid var(--text3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;animation:bob 2.5s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.hero-grid{position:absolute;inset:0;opacity:.04;background-image:linear-gradient(var(--accent) 1px,transparent 1px),linear-gradient(90deg,var(--accent) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse 80% 60% at 50% 100%,black 30%,transparent 80%)}
+.hero-glow{position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:70vw;height:70vw;max-width:900px;max-height:900px;border-radius:50%;background:radial-gradient(ellipse,rgba(99,179,237,0.06) 0%,transparent 65%);pointer-events:none}
+.hero-tag{font-family:var(--font-m);font-size:.72rem;color:var(--accent);letter-spacing:.18em;text-transform:uppercase;display:flex;align-items:center;gap:.8rem;margin-bottom:1.8rem;animation:fIn .8s .2s both}
+.hero-tag::before{content:'';width:36px;height:1px;background:var(--accent)}
+.hero-avail{display:flex;align-items:center;gap:.4rem;margin-left:1rem}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(104,211,145,.4)}50%{box-shadow:0 0 0 6px rgba(104,211,145,0)}}
+.hero-name{font-family:var(--font-h);font-size:clamp(3.5rem,10vw,9rem);font-weight:900;letter-spacing:-.04em;line-height:.88;margin-bottom:2.5rem}
+.hero-name .ln{display:block;overflow:hidden}
+.hero-name .wd{display:inline-block;animation:su .9s cubic-bezier(.16,1,.3,1) both}
+.hero-name .w1{animation-delay:.05s}.hero-name .w2{animation-delay:.15s}
+.hero-name .acc{color:var(--accent);font-family:var(--font-s);font-style:italic;font-weight:300}
+@keyframes su{from{transform:translateY(110%);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes fIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.hero-row{display:flex;align-items:flex-end;justify-content:space-between;gap:2rem;flex-wrap:wrap}
+.hero-bio{font-family:var(--font-m);font-size:.82rem;color:var(--text2);max-width:380px;line-height:1.9;animation:fIn .9s .5s both}
+.hero-bio strong{color:var(--accent3)}
+.hero-btns{display:flex;gap:.75rem;align-items:center;animation:fIn .9s .65s both}
+.btn-p{padding:.8rem 1.8rem;background:var(--accent);color:#080b10;font-family:var(--font-h);font-weight:800;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;border-radius:2px;transition:background .2s,transform .2s;display:inline-block}
+.btn-p:hover{background:var(--accent3);transform:translateY(-2px)}
+.btn-o{padding:.8rem 1.8rem;border:1px solid var(--border2);color:var(--text2);font-family:var(--font-h);font-weight:700;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;border-radius:2px;transition:all .2s;display:inline-block}
+.btn-o:hover{color:var(--text);border-color:var(--text3);transform:translateY(-2px)}
+.hero-scroll{position:absolute;right:5vw;bottom:6rem;writing-mode:vertical-rl;font-family:var(--font-m);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);display:flex;align-items:center;gap:.75rem;animation:fIn 1s 1s both}
+.hero-scroll::after{content:'';width:1px;height:55px;background:linear-gradient(to bottom,transparent,var(--text3));animation:sa 2s ease-in-out infinite}
+@keyframes sa{0%,100%{opacity:.2}50%{opacity:.8}}
+.marquee-wrap{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:.9rem 0;overflow:hidden;background:var(--bg2)}
+.marquee-track{display:flex;gap:0;white-space:nowrap;animation:mq 28s linear infinite}
+.marquee-item{font-family:var(--font-m);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);padding:0 2.5rem;border-right:1px solid var(--border)}
+.marquee-item span{color:var(--accent);margin-right:.5rem}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.sec-label{font-family:var(--font-m);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:.8rem;margin-bottom:1.2rem}
+.sec-label::before{content:attr(data-n);color:var(--text3)}
+.sec-title{font-size:clamp(2rem,4vw,3.2rem);font-weight:900;letter-spacing:-.03em;line-height:1.05}
+.sec-title em{font-family:var(--font-s);font-style:italic;font-weight:300;color:var(--accent)}
+.rv{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+.rv.on{opacity:1;transform:translateY(0)}
+#about{padding:8rem 5vw;display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center}
+.about-body{font-family:var(--font-m);font-size:.83rem;color:var(--text2);line-height:2;margin-bottom:1.2rem}
+.about-body strong{color:var(--text)}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.stat{background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:1.5rem 1.4rem;transition:border-color .3s,background .3s;position:relative;overflow:hidden}
+.stat::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0;transition:opacity .3s}
+.stat:hover{border-color:var(--border2);background:var(--bg4)}.stat:hover::before{opacity:1}
+.stat-n{font-size:2.2rem;font-weight:900;color:var(--accent);letter-spacing:-.04em;line-height:1;margin-bottom:.35rem}
+.stat-l{font-family:var(--font-m);font-size:.72rem;color:var(--text2);line-height:1.6}
+#skills{padding:6rem 5vw;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.skills-top{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:3.5rem}
+.skills-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:2.5rem}
+.sk-col-title{font-family:var(--font-m);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);padding-bottom:.75rem;border-bottom:1px solid var(--border);margin-bottom:1.2rem}
+.tags{display:flex;flex-wrap:wrap;gap:.5rem}
+.tag{padding:.35rem .8rem;background:var(--bg3);border:1px solid var(--border);border-radius:2px;font-family:var(--font-m);font-size:.72rem;color:var(--text2);transition:all .2s;letter-spacing:.02em}
+.tag:hover,.tag.hi{background:var(--dim);border-color:rgba(99,179,237,.3);color:var(--accent)}
+.tag.gold{background:rgba(246,201,14,.08);border-color:rgba(246,201,14,.25);color:var(--gold)}
+#projects{padding:8rem 5vw}
+.proj-top{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:3.5rem}
+.proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5px;border:1.5px solid var(--border);background:var(--border)}
+.pc{background:var(--bg);padding:2.5rem;min-height:260px;display:flex;flex-direction:column;position:relative;overflow:hidden;transition:background .3s}
+.pc::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--glow),transparent);opacity:0;transition:opacity .4s}
+.pc:hover{background:var(--bg3)}.pc:hover::after{opacity:1}
+.pc.feat{grid-column:span 2;flex-direction:row;align-items:center;gap:3rem;min-height:200px}
+.pc.feat .pc-c{flex:1;position:relative;z-index:1}
+.feat-badge{font-family:var(--font-m);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);border:1px solid rgba(99,179,237,.3);padding:.18rem .55rem;border-radius:2px;display:inline-block;margin-bottom:.9rem}
+.pc-num{font-family:var(--font-m);font-size:.62rem;letter-spacing:.12em;color:var(--text3);margin-bottom:1.2rem}
+.pc-name{font-size:1.3rem;font-weight:800;letter-spacing:-.02em;line-height:1.15;margin-bottom:.6rem;position:relative;z-index:1}
+.pc.feat .pc-name{font-size:1.7rem}
+.pc-desc{font-family:var(--font-m);font-size:.78rem;color:var(--text2);line-height:1.8;flex:1;margin-bottom:1.8rem;position:relative;z-index:1}
+.pc-foot{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}
+.stacks{display:flex;gap:.35rem;flex-wrap:wrap}
+.st{padding:.18rem .45rem;background:var(--bg4);border:1px solid var(--border);font-family:var(--font-m);font-size:.6rem;color:var(--text3);border-radius:2px;letter-spacing:.03em}
+.pc-links{display:flex;gap:.5rem}
+.pl{width:32px;height:32px;border:1px solid var(--border2);border-radius:2px;display:flex;align-items:center;justify-content:center;color:var(--text2);text-decoration:none;font-size:.75rem;font-family:var(--font-m);transition:all .2s}
+.pl:hover{border-color:var(--accent);color:var(--accent);background:var(--dim)}
+#certs{padding:7rem 5vw;background:var(--bg2);border-top:1px solid var(--border)}
+.certs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:3rem}
+.cert-card{background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:1.5rem;transition:all .3s;position:relative;overflow:hidden}
+.cert-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity .3s}
+.cert-card:hover{border-color:rgba(246,201,14,.25);background:var(--bg4)}.cert-card:hover::before{opacity:1}
+.cert-issuer{font-family:var(--font-m);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem}
+.cert-name{font-size:.95rem;font-weight:700;line-height:1.3;margin-bottom:.5rem;letter-spacing:-.01em}
+.cert-date{font-family:var(--font-m);font-size:.65rem;color:var(--text3)}
+#experience{padding:8rem 5vw;border-top:1px solid var(--border)}
+.exp-layout{display:grid;grid-template-columns:1fr 2fr;gap:6rem;margin-top:3.5rem}
+.exp-side{position:sticky;top:7rem;height:fit-content}
+.exp-quote{font-family:var(--font-s);font-style:italic;font-size:1.15rem;color:var(--text2);line-height:1.7;margin-bottom:2rem}
+.exp-items{display:flex;flex-direction:column}
+.ei{padding:2rem 0;border-top:1px solid var(--border);display:grid;grid-template-columns:110px 1fr;gap:2rem}
+.ei:last-child{border-bottom:1px solid var(--border)}
+.ei-date{font-family:var(--font-m);font-size:.68rem;letter-spacing:.05em;color:var(--text3);padding-top:.15rem;line-height:1.6}
+.ei-role{font-size:1.05rem;font-weight:800;letter-spacing:-.01em;margin-bottom:.2rem}
+.ei-co{font-family:var(--font-m);font-size:.78rem;color:var(--accent);margin-bottom:.9rem;letter-spacing:.02em}
+.ei-desc{font-family:var(--font-m);font-size:.78rem;color:var(--text2);line-height:1.85}
+.ei-tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.85rem}
+.ei-tag{padding:.15rem .45rem;background:var(--bg3);border:1px solid var(--border);font-family:var(--font-m);font-size:.62rem;color:var(--text3);border-radius:2px}
+.ei-list{margin:.8rem 0 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:.45rem}
+.ei-list li{font-family:var(--font-m);font-size:.77rem;color:var(--text2);line-height:1.7;padding-left:1.1rem;position:relative}
+.ei-list li::before{content:'\2192';position:absolute;left:0;color:var(--accent);font-size:.7rem}
+.ei-list li strong{color:var(--text)}
+.pc-list{margin:.6rem 0 1.2rem 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:.4rem}
+.pc-list li{font-family:var(--font-m);font-size:.75rem;color:var(--text2);line-height:1.6;padding-left:1rem;position:relative}
+.pc-list li::before{content:'\203A';position:absolute;left:0;color:var(--accent)}
+.highlight-box{background:var(--bg4);border:1px solid var(--border);border-left:2px solid var(--accent);border-radius:2px;padding:.9rem 1rem;margin:.9rem 0;font-family:var(--font-m);font-size:.75rem;color:var(--text2);line-height:1.7}
+.highlight-box strong{color:var(--accent3)}
+.about-list{margin:.5rem 0 1rem 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:.4rem}
+.about-list li{font-family:var(--font-m);font-size:.82rem;color:var(--text2);line-height:1.7;padding-left:1.2rem;position:relative}
+.about-list li::before{content:'\25C6';position:absolute;left:0;color:var(--accent);font-size:.5rem;top:.45rem}
+#contact{padding:8rem 5vw;position:relative;overflow:hidden;min-height:55vh;display:flex;flex-direction:column;justify-content:center}
+.contact-glow{position:absolute;bottom:-30%;right:-10%;width:60vw;height:60vw;max-width:700px;max-height:700px;border-radius:50%;background:radial-gradient(ellipse,rgba(99,179,237,.06) 0%,transparent 65%);pointer-events:none}
+.contact-title{font-size:clamp(2.5rem,7vw,6rem);font-weight:900;letter-spacing:-.04em;line-height:.92;margin-bottom:1.5rem}
+.contact-title em{font-family:var(--font-s);font-style:italic;font-weight:300;color:var(--accent)}
+.contact-sub{font-family:var(--font-m);font-size:.85rem;color:var(--text2);line-height:1.9;margin-bottom:2.5rem;max-width:500px}
+.contact-links{display:flex;gap:.75rem;flex-wrap:wrap}
+.cl{padding:.8rem 1.5rem;border:1px solid var(--border2);border-radius:2px;font-family:var(--font-h);font-size:.75rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text2);text-decoration:none;transition:all .2s;display:flex;align-items:center;gap:.5rem}
+.cl:hover{color:var(--text);border-color:var(--text3)}
+.cl.p{background:var(--accent);color:#080b10;border-color:var(--accent)}
+.cl.p:hover{background:var(--accent3);border-color:var(--accent3)}
+footer{padding:1.8rem 5vw;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.fc{font-family:var(--font-m);font-size:.68rem;color:var(--text3)}
+.fc span{color:var(--accent)}
+.fl{display:flex;gap:1.5rem}
+.fl a{font-family:var(--font-m);font-size:.68rem;color:var(--text3);text-decoration:none;transition:color .2s}
+.fl a:hover{color:var(--accent)}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
+@media(max-width:900px){
+  nav{padding:1.2rem 5vw}nav.s{padding:.9rem 5vw}
+  .nav-r{display:none}.mob-btn{display:block}
+  #hero{padding:0 5vw 5rem}.hero-scroll{display:none}
+  #three-canvas{width:100%;height:45%;top:auto;bottom:0;opacity:.4}
+  .drag-hint{display:none}
+  #about{grid-template-columns:1fr;gap:3rem;padding:5rem 5vw}
+  .stat-grid{grid-template-columns:1fr 1fr}
+  #skills{padding:5rem 5vw}.skills-cols{grid-template-columns:1fr}.skills-top{flex-direction:column;align-items:flex-start;gap:1rem}
+  #projects{padding:5rem 5vw}.proj-grid{grid-template-columns:1fr}.pc.feat{grid-column:span 1;flex-direction:column}.proj-top{flex-direction:column;align-items:flex-start;gap:1rem}
+  #certs{padding:5rem 5vw}.certs-grid{grid-template-columns:1fr 1fr}
+  #experience{padding:5rem 5vw}.exp-layout{grid-template-columns:1fr;gap:2rem}.exp-side{position:static}
+  .ei{grid-template-columns:1fr;gap:.5rem}
+  #contact{padding:5rem 5vw}
+  footer{flex-direction:column;text-align:center}
+}
+@media(max-width:560px){.stat-grid{grid-template-columns:1fr}.certs-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="cur"></div>
+<div id="cur2"></div>
+
+<nav id="nav">
+  <a href="#hero" class="logo">mn<span>_</span>nicholas</a>
+  <div class="nav-r">
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#experience">Experience</a>
+    <a href="#contact" class="nav-cta">Contact</a>
+  </div>
+  <button class="mob-btn" onclick="toggleNav()">&#9776;</button>
+</nav>
+
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <canvas id="three-canvas"></canvas>
+  <div class="drag-hint">
+    <div class="drag-hint-icon">⟳</div>
+    drag to rotate
+  </div>
+  <div class="hero-content">
+    <div class="hero-tag">
+      Oracle APEX &amp; Frontend Developer
+      <span class="hero-avail"><span class="dot"></span>Open to opportunities</span>
+    </div>
+    <h1 class="hero-name">
+      <span class="ln"><span class="wd w1">Manuel</span></span>
+      <span class="ln"><span class="wd w2 acc">Nicholas</span></span>
+    </h1>
+    <div class="hero-row">
+      <p class="hero-bio">
+        Building enterprise-grade web applications with <strong>Oracle APEX</strong>, <strong>PL/SQL</strong>, and modern frontend stacks. Currently leading application development at <strong>KCSI</strong>, consulting for Nojorono Group.<br><br>
+        East Jakarta, Indonesia &nbsp;&middot;&nbsp; Fluent in English (C2)
+      </p>
+      <div class="hero-btns">
+        <a href="#projects" class="btn-p">View Work</a>
+        <a href="mailto:manuelnicholasn@gmail.com" class="btn-o">Get In Touch</a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">Scroll</div>
+</section>
+
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item"><span>&#9733;</span> Oracle APEX</span>
+    <span class="marquee-item"><span>&#9733;</span> PL/SQL</span>
+    <span class="marquee-item"><span>&#9733;</span> React JS</span>
+    <span class="marquee-item"><span>&#9733;</span> Node JS</span>
+    <span class="marquee-item"><span>&#9733;</span> Oracle EBS</span>
+    <span class="marquee-item"><span>&#9733;</span> REST API</span>
+    <span class="marquee-item"><span>&#9733;</span> Three.js</span>
+    <span class="marquee-item"><span>&#9733;</span> AWS</span>
+    <span class="marquee-item"><span>&#9733;</span> Figma</span>
+    <span class="marquee-item"><span>&#9733;</span> GitLab</span>
+    <span class="marquee-item"><span>&#9733;</span> UI/UX Design</span>
+    <span class="marquee-item"><span>&#9733;</span> Machine Learning</span>
+    <span class="marquee-item"><span>&#9733;</span> Oracle APEX</span>
+    <span class="marquee-item"><span>&#9733;</span> PL/SQL</span>
+    <span class="marquee-item"><span>&#9733;</span> React JS</span>
+    <span class="marquee-item"><span>&#9733;</span> Node JS</span>
+    <span class="marquee-item"><span>&#9733;</span> Oracle EBS</span>
+    <span class="marquee-item"><span>&#9733;</span> REST API</span>
+    <span class="marquee-item"><span>&#9733;</span> Three.js</span>
+    <span class="marquee-item"><span>&#9733;</span> AWS</span>
+    <span class="marquee-item"><span>&#9733;</span> Figma</span>
+    <span class="marquee-item"><span>&#9733;</span> GitLab</span>
+    <span class="marquee-item"><span>&#9733;</span> UI/UX Design</span>
+    <span class="marquee-item"><span>&#9733;</span> Machine Learning</span>
+  </div>
+</div>
+
+<section id="about">
+  <div class="rv">
+    <div class="sec-label" data-n="01">About Me</div>
+    <h2 class="sec-title" style="margin-bottom:2rem;">Building systems<br>that <em>matter</em></h2>
+    <p class="about-body">
+      A graduate of <strong>Information Systems at Universitas Brawijaya</strong>, I have grown into an Oracle APEX Developer &amp; Frontend Developer focused on building critical enterprise solutions for finance, general ledger, and audit industries.
+    </p>
+    <p class="about-body">I manage the full development lifecycle &mdash; from user requirement gathering, system design, and development, through to testing, deployment, and post-go-live support &mdash; with a consistent track record of <strong>zero critical downtime</strong> and high user adoption.</p>
+
+    <div class="highlight-box">
+      <strong>What I bring to every project:</strong><br>
+      User-centered design principles &middot; Responsive layouts &middot; Intuitive navigation &middot; Fast-loading interfaces &middot; Enterprise-grade security (RBAC) &middot; Automated workflows
+    </div>
+
+    <p class="about-body" style="margin-top:.8rem;">Outside of my primary role, I am a freelance <strong>Web Developer &amp; Graphic Designer</strong> since 2018, and an active explorer of emerging technologies &mdash; Three.js, Machine Learning, and AI tools.</p>
+    <div style="margin-top:1.5rem;display:flex;gap:.75rem;flex-wrap:wrap;">
+      <a href="https://linkedin.com/in/manuelnicholas/" target="_blank" class="btn-o">LinkedIn &#8599;</a>
+      <a href="https://github.com/nuelheran" target="_blank" class="btn-o">GitHub &#8599;</a>
+    </div>
+  </div>
+  <div class="rv">
+    <div class="stat-grid">
+      <div class="stat"><div class="stat-n">2+</div><div class="stat-l">Years enterprise<br>development</div></div>
+      <div class="stat"><div class="stat-n">5+</div><div class="stat-l">Years freelance<br>web &amp; design</div></div>
+      <div class="stat"><div class="stat-n">7+</div><div class="stat-l">Certifications<br>earned</div></div>
+      <div class="stat"><div class="stat-n">C2</div><div class="stat-l">English<br>proficiency (EF SET)</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="skills-top rv">
+    <div>
+      <div class="sec-label" data-n="02">Tech Stack</div>
+      <h2 class="sec-title">Skills &amp;<br>Technologies</h2>
+    </div>
+  </div>
+  <div class="skills-cols rv">
+    <div>
+      <div class="sk-col-title">Core / Oracle</div>
+      <div class="tags">
+        <span class="tag hi">Oracle APEX</span>
+        <span class="tag hi">PL/SQL</span>
+        <span class="tag">Oracle DB</span>
+        <span class="tag">E-Business Suite</span>
+        <span class="tag">TOAD</span>
+        <span class="tag">SQL</span>
+        <span class="tag">RBAC Auth</span>
+        <span class="tag">SMTP Config</span>
+        <span class="tag">DB Links</span>
+      </div>
+    </div>
+    <div>
+      <div class="sk-col-title">Frontend</div>
+      <div class="tags">
+        <span class="tag hi">React JS</span>
+        <span class="tag hi">JavaScript</span>
+        <span class="tag hi">HTML5</span>
+        <span class="tag hi">CSS3</span>
+        <span class="tag">Three.js</span>
+        <span class="tag">REST API</span>
+        <span class="tag">Figma</span>
+        <span class="tag">UI/UX Design</span>
+        <span class="tag">Responsive Design</span>
+      </div>
+    </div>
+    <div>
+      <div class="sk-col-title">Backend &amp; Infra</div>
+      <div class="tags">
+        <span class="tag hi">Node JS</span>
+        <span class="tag">AWS</span>
+        <span class="tag">GitLab</span>
+        <span class="tag">Machine Learning</span>
+        <span class="tag">API Integration</span>
+        <span class="tag">Job Schedulers</span>
+        <span class="tag">Excel Macros</span>
+        <span class="tag gold">AI Tools</span>
+      </div>
+    </div>
+  </div>
+  <div class="skills-cols rv" style="margin-top:2.5rem;">
+    <div>
+      <div class="sk-col-title">Automation &amp; Infra</div>
+      <div class="tags">
+        <span class="tag hi">DBMS_SCHEDULER</span>
+        <span class="tag hi">DB Links</span>
+        <span class="tag hi">SMTP Config</span>
+        <span class="tag">PL/SQL Triggers</span>
+        <span class="tag">RBAC Auth</span>
+        <span class="tag">Oracle ORDS</span>
+        <span class="tag">Error Handling</span>
+        <span class="tag">Audit Logging</span>
+      </div>
+    </div>
+    <div>
+      <div class="sk-col-title">Version Control &amp; Deployment</div>
+      <div class="tags">
+        <span class="tag hi">Git</span>
+        <span class="tag hi">GitHub</span>
+        <span class="tag hi">GitLab</span>
+        <span class="tag">Netlify</span>
+        <span class="tag">AWS</span>
+        <span class="tag">Branching Strategy</span>
+        <span class="tag">CI/CD</span>
+        <span class="tag">Env Variables</span>
+      </div>
+    </div>
+    <div>
+      <div class="sk-col-title">Softwares &amp; Tools</div>
+      <div class="tags">
+        <span class="tag">Adobe Photoshop</span>
+        <span class="tag">Adobe Illustrator</span>
+        <span class="tag">Figma</span>
+        <span class="tag">TOAD</span>
+        <span class="tag">VS Code</span>
+        <span class="tag gold">AI Tools</span>
+      </div>
+    </div>
+  </div>
+  <div class="skills-cols rv" style="margin-top:2.5rem;">
+    <div>
+      <div class="sk-col-title">Abilities</div>
+      <div class="tags">
+        <span class="tag hi">UI/UX Design</span>
+        <span class="tag">User Testing</span>
+        <span class="tag">Web Usability</span>
+        <span class="tag">Wireframing</span>
+        <span class="tag">Prototyping</span>
+        <span class="tag">Business Analytics</span>
+        <span class="tag">Problem Solving</span>
+        <span class="tag">Competitor Analysis</span>
+        <span class="tag">User Requirements Analysis</span>
+      </div>
+    </div>
+    <div>
+      <div class="sk-col-title">Transferable Knowledge</div>
+      <div class="tags">
+        <span class="tag">PostgreSQL concepts</span>
+        <span class="tag">REST API patterns</span>
+        <span class="tag">Auth schemes</span>
+        <span class="tag">Realtime patterns</span>
+        <span class="tag">Full-stack lifecycle</span>
+        <span class="tag">Agile delivery</span>
+      </div>
+    </div>
+    <div>
+      <div class="sk-col-title">Languages</div>
+      <div class="tags">
+        <span class="tag hi">Indonesian &mdash; Native</span>
+        <span class="tag hi">English &mdash; C2 Proficient</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="proj-top rv">
+    <div>
+      <div class="sec-label" data-n="03">Portfolio</div>
+      <h2 class="sec-title">Selected<br>Work</h2>
+    </div>
+    <a href="https://github.com/nuelheran" target="_blank" class="btn-o">All Projects &#8599;</a>
+  </div>
+  <div class="proj-grid rv">
+    <div class="pc feat">
+      <div class="pc-c">
+        <span class="feat-badge">Featured</span>
+        <div class="pc-num">Project 01</div>
+        <div class="pc-name">Whistleblowing System (WBS)</div>
+        <p class="pc-desc">Enterprise internal audit platform for PT Nojorono Tobacco International. A secure, confidential violation reporting channel enhancing corporate governance and internal control.</p>
+        <ul class="pc-list">
+          <li>Designed the full user flow to ensure reporters can submit violations easily while maintaining anonymity</li>
+          <li>Intuitive navigation with clear submission steps, form validation, and status tracking</li>
+          <li>Full-cycle development: requirements &rarr; design &rarr; development &rarr; testing &rarr; deployment &rarr; post-go-live support</li>
+          <li>Zero critical downtime post-launch, high user adoption across departments</li>
+        </ul>
+        <div class="pc-foot">
+          <div class="stacks">
+            <span class="st">Oracle APEX</span><span class="st">PL/SQL</span><span class="st">HTML/CSS/JS</span><span class="st">SQL</span><span class="st">UI/UX Design</span>
+          </div>
+          <div class="pc-links"><a href="https://github.com/nuelheran" target="_blank" class="pl">GH</a></div>
+        </div>
+      </div>
+    </div>
+    <div class="pc">
+      <div class="pc-num">Project 02</div>
+      <div class="pc-name">Financial Accounting System (GL)</div>
+      <p class="pc-desc">General Ledger platform for Strategic Finance. Accountants can quickly access journal entries, trial balances, and financial reports with fast-loading large datasets.</p>
+      <ul class="pc-list">
+        <li>Responsive layouts optimized for large financial datasets with clear visual hierarchy</li>
+        <li>Applied UI/UX best practices: fast page loads, intuitive data filtering, export-ready reports</li>
+        <li>Integrated with Oracle E-Business Suite for seamless GL management</li>
+      </ul>
+      <div class="pc-foot">
+        <div class="stacks"><span class="st">Oracle APEX</span><span class="st">Oracle EBS</span><span class="st">PL/SQL</span><span class="st">AWS</span></div>
+      </div>
+    </div>
+    <div class="pc">
+      <div class="pc-num">Project 03</div>
+      <div class="pc-name">Budgeting &amp; Forecasting System</div>
+      <p class="pc-desc">Critical finance platform for Strategic Finance with a focus on clarity and ease of use for finance teams. Supports budget submission, approval workflows, and forecasting dashboards.</p>
+      <ul class="pc-list">
+        <li>Intuitive navigation for multi-step approval workflows and budget submission</li>
+        <li>UI designed to reduce data entry errors and speed up the budgeting cycle</li>
+        <li>Automated job schedulers (DBMS_SCHEDULER) run consolidations during off-peak hours</li>
+      </ul>
+      <div class="pc-foot">
+        <div class="stacks"><span class="st">Oracle APEX</span><span class="st">PL/SQL</span><span class="st">Machine Learning</span><span class="st">REST API</span></div>
+      </div>
+    </div>
+    <div class="pc">
+      <div class="pc-num">Project 04</div>
+      <div class="pc-name">Interactive 3D Data Dashboard</div>
+      <p class="pc-desc">Pioneered interactive 3D data visualization inside Oracle APEX using Three.js — going beyond traditional flat dashboards for a modern, engaging UX.</p>
+      <ul class="pc-list">
+        <li>3D models to visualize complex data structures and enterprise metrics interactively</li>
+        <li>Excel Macro-ready report exports with automated on-premise &harr; cloud data sync</li>
+        <li>Configured SMTP alerts and job schedulers for automated data pipeline monitoring</li>
+      </ul>
+      <div class="pc-foot">
+        <div class="stacks"><span class="st">Three.js</span><span class="st">Oracle APEX</span><span class="st">JavaScript</span><span class="st">Excel Macros</span></div>
+      </div>
+    </div>
+    <div class="pc">
+      <div class="pc-num">Project 05</div>
+      <div class="pc-name">Risk Management Platform</div>
+      <p class="pc-desc">Enterprise risk platform for Nojorono Group with an interactive heatmap to visually map risks across all departments by probability and impact.</p>
+      <ul class="pc-list">
+        <li>Interactive risk heatmap filterable by department, risk category, and severity level</li>
+        <li>Stakeholders can instantly identify high-risk areas across the group</li>
+        <li>Full RBAC authentication, SMTP notifications, on-premise &harr; cloud server integration</li>
+      </ul>
+      <div class="pc-foot">
+        <div class="stacks"><span class="st">Oracle APEX</span><span class="st">PL/SQL</span><span class="st">AWS</span><span class="st">RBAC</span><span class="st">Three.js</span></div>
+      </div>
+    </div>
+    <div class="pc">
+      <div class="pc-num">Project 06</div>
+      <div class="pc-name">Freelance Web &amp; Design Work</div>
+      <p class="pc-desc">Custom websites and visual identities for individuals and businesses since 2018. Portfolio deployed on Netlify with GitHub-connected auto-deployments.</p>
+      <ul class="pc-list">
+        <li>Responsive across all devices: mobile, tablet, laptop, desktop</li>
+        <li>Figma for wireframing &amp; prototyping; Photoshop for visual design</li>
+        <li>Custom features: e-commerce, contact forms, brand identity, animations</li>
+        <li>Focused on fast loading, intuitive navigation, and high user engagement</li>
+      </ul>
+      <div class="pc-foot">
+        <div class="stacks"><span class="st">React JS</span><span class="st">HTML/CSS</span><span class="st">Node.js</span><span class="st">Figma</span><span class="st">Netlify</span></div>
+        <div class="pc-links"><a href="https://github.com/nuelheran" target="_blank" class="pl">GH</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="certs">
+  <div class="rv">
+    <div class="sec-label" data-n="04">Credentials</div>
+    <h2 class="sec-title">Licenses &amp;<br><em>Certifications</em></h2>
+  </div>
+  <div class="certs-grid rv">
+    <div class="cert-card">
+      <div class="cert-issuer">Oracle</div>
+      <div class="cert-name">Oracle APEX Cloud Developer Certified Professional</div>
+      <div class="cert-date">Issued May 2025 &middot; No Expiration</div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-issuer">Anthropic</div>
+      <div class="cert-name">Claude Code in Action</div>
+      <div class="cert-date">Issued Mar 2026 &middot; No Expiration</div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-issuer">EF Standard English Test</div>
+      <div class="cert-name">English Certificate &mdash; C2 Proficient (78/100)</div>
+      <div class="cert-date">Issued Sep 2023</div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-issuer">Accenture</div>
+      <div class="cert-name">Digital Skills: User Experience (Score 91/100)</div>
+      <div class="cert-date">Issued Sep 2023 &middot; No Expiration</div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-issuer">freeCodeCamp</div>
+      <div class="cert-name">Front End Development</div>
+      <div class="cert-date">Issued Nov 2021 &middot; No Expiration</div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-issuer">Cognitive Class</div>
+      <div class="cert-name">Digital Analytics &amp; Regression</div>
+      <div class="cert-date">Issued Sep 2023 &middot; No Expiration</div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="rv">
+    <div class="sec-label" data-n="05">Journey</div>
+    <h2 class="sec-title">Work &amp;<br><em>Education</em></h2>
+  </div>
+  <div class="exp-layout">
+    <div class="exp-side rv">
+      <p class="exp-quote">"From building student programs to enterprise financial systems &mdash; every step has been intentional."</p>
+      <a href="mailto:manuelnicholasn@gmail.com" class="btn-p" style="display:inline-block;">Get In Touch &#8599;</a>
+    </div>
+    <div class="exp-items rv">
+      <div class="ei">
+        <div class="ei-date">Jan 2025<br>Present</div>
+        <div>
+          <div class="ei-role">Application Development Supervisor</div>
+          <div class="ei-co">PT Karya Cipta Solusi Internasional (KCSI)</div>
+          <p class="ei-desc">Leading development of high-impact finance projects consulting for Nojorono Group. Took on broader strategic responsibility for the company's financial infrastructure and decision-making systems.</p>
+          <ul class="ei-list">
+            <li>Building financial consolidation systems, budgeting &amp; forecasting platforms, budget monitoring, and risk management applications</li>
+            <li>Designed and implemented <strong>automated data sync</strong> between on-premise and cloud servers using Oracle DBMS_SCHEDULER and DB links &mdash; zero manual intervention</li>
+            <li>Configured <strong>SMTP notification systems</strong> triggered by database events (new submission, approval pending, error alerts)</li>
+            <li>Implemented <strong>event-driven triggers</strong> to auto-update summary tables, send notifications, and validate data on change</li>
+            <li>Built custom logging tables for full observability: timestamps, status, error messages, execution duration</li>
+          </ul>
+          <div class="ei-tags"><span class="ei-tag">Oracle APEX</span><span class="ei-tag">PL/SQL</span><span class="ei-tag">AWS</span><span class="ei-tag">Machine Learning</span><span class="ei-tag">REST API</span><span class="ei-tag">DBMS_SCHEDULER</span></div>
+        </div>
+      </div>
+      <div class="ei">
+        <div class="ei-date">Jan 2024<br>Jan 2025</div>
+        <div>
+          <div class="ei-role">Application Development Supervisor</div>
+          <div class="ei-co">PT Nojorono Tobacco International</div>
+          <p class="ei-desc">Delivered high-impact system solutions across Strategic Finance, General Ledger, and Internal Audit divisions. Zero critical downtime, high user adoption.</p>
+          <ul class="ei-list">
+            <li>Built the <strong>Whistleblowing System (WBS)</strong> for Internal Audit &mdash; secure, anonymous violation reporting with intuitive user flow</li>
+            <li>Designed <strong>UI/UX for all financial systems</strong> applying user-centered design: responsive layouts, clear visual hierarchy, intuitive navigation to reduce errors and speed up workflows</li>
+            <li>Created an <strong>interactive risk heatmap</strong> using Three.js to visually map risks across departments &mdash; filterable by department, category, and severity</li>
+            <li>Pioneered <strong>interactive 3D data visualization</strong> with Three.js inside Oracle APEX enterprise applications</li>
+            <li>Built and integrated <strong>REST APIs</strong> using Oracle ORDS to expose database objects as REST endpoints</li>
+            <li>Designed full database objects: Tables, Views, Packages, Triggers, Functions, DB Links</li>
+            <li>Implemented <strong>RBAC authentication</strong> and custom auth schemes integrated with corporate directories</li>
+            <li>Used <strong>GitLab</strong> for version control &mdash; branching strategies, pull requests, merge conflict resolution</li>
+            <li>Conducted internal <strong>knowledge-sharing sessions</strong> on PL/SQL optimization, Oracle APEX best practices, and frontend customization (HTML, CSS, JS)</li>
+          </ul>
+          <div class="ei-tags"><span class="ei-tag">Oracle APEX</span><span class="ei-tag">PL/SQL</span><span class="ei-tag">Three.js</span><span class="ei-tag">Oracle EBS</span><span class="ei-tag">GitLab</span><span class="ei-tag">Figma</span><span class="ei-tag">ORDS</span><span class="ei-tag">RBAC</span></div>
+        </div>
+      </div>
+      <div class="ei">
+        <div class="ei-date">Feb 2022<br>Apr 2022</div>
+        <div>
+          <div class="ei-role">Intern Staff</div>
+          <div class="ei-co">Kementerian Komunikasi dan Informatika RI</div>
+          <p class="ei-desc">Research on government programs for public dissemination. Collaborated with copywriters for social media content strategy. Designed Instagram content using Adobe Illustrator and Photoshop.</p>
+          <div class="ei-tags"><span class="ei-tag">Adobe Illustrator</span><span class="ei-tag">Adobe Photoshop</span><span class="ei-tag">Content Strategy</span></div>
+        </div>
+      </div>
+      <div class="ei">
+        <div class="ei-date">2018<br>Present</div>
+        <div>
+          <div class="ei-role">Web Developer &amp; Graphic Designer</div>
+          <div class="ei-co">Freelance</div>
+          <p class="ei-desc">Building custom websites and visual identities for clients since 2018. Deployed personal portfolio on Netlify with GitHub-connected auto-deployments.</p>
+          <ul class="ei-list">
+            <li>Built websites using HTML, CSS, JavaScript, and Node.js &mdash; tailored to each client's brand and requirements</li>
+            <li>Implemented custom features: e-commerce capabilities, contact forms, animations, and dynamic content</li>
+            <li>Used <strong>Figma</strong> for wireframing and prototyping; <strong>Adobe Photoshop</strong> for visual design and brand assets</li>
+            <li>Ensured responsive design across all devices: mobile, tablet, laptop, and desktop</li>
+            <li>Focused on UX: intuitive navigation, fast loading times, and high user engagement</li>
+            <li>Used <strong>Git &amp; GitHub</strong> for version control &mdash; branching, commits, pull requests, and remote collaboration</li>
+            <li>Connected <strong>Netlify</strong> to GitHub for automatic deployments on every push, managing environment variables and custom domains</li>
+          </ul>
+          <div class="ei-tags"><span class="ei-tag">HTML/CSS/JS</span><span class="ei-tag">React JS</span><span class="ei-tag">Node.js</span><span class="ei-tag">Figma</span><span class="ei-tag">Adobe Photoshop</span><span class="ei-tag">Git/GitHub</span><span class="ei-tag">Netlify</span></div>
+        </div>
+      </div>
+      <div class="ei">
+        <div class="ei-date">2016<br>2023</div>
+        <div>
+          <div class="ei-role">S1 Sistem Informasi</div>
+          <div class="ei-co">Universitas Brawijaya</div>
+          <p class="ei-desc">Majored in Information Systems. Active in student organizations &mdash; Staff at Kementerian Inovasi Karya, Eksekutif Mahasiswa Universitas Brawijaya (2017&ndash;2018). Led committees and organized scientific writing competitions.</p>
+          <div class="ei-tags"><span class="ei-tag">Information Systems</span><span class="ei-tag">Leadership</span><span class="ei-tag">Organization</span></div>
+        </div>
+      </div>
+      <div class="ei">
+        <div class="ei-date">2013<br>2016</div>
+        <div>
+          <div class="ei-role">SMA Negeri 81 Jakarta</div>
+          <div class="ei-co">Mathematics and Natural Sciences</div>
+          <p class="ei-desc">Head of Seksi 2: Wawasan Keilmuan, OSIS Board. Led science-focused programs, academic workshops, and promoted scientific exploration within the student community.</p>
+          <div class="ei-tags"><span class="ei-tag">Leadership</span><span class="ei-tag">Science Track</span><span class="ei-tag">OSIS</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="contact-glow"></div>
+  <div class="rv" style="max-width:720px;position:relative;z-index:1;">
+    <div class="sec-label" data-n="06">Contact</div>
+    <h2 class="contact-title">Let's build<br>something <em>great</em></h2>
+    <p class="contact-sub">Terbuka untuk peluang kerja, project kolaborasi, atau sekadar ngobrol soal teknologi &mdash; Oracle APEX, web development, atau anything in between. Reach out anytime!</p>
+    <div class="contact-links">
+      <a href="mailto:manuelnicholasn@gmail.com" class="cl p">&#9993; Email Me</a>
+      <a href="https://linkedin.com/in/manuelnicholas/" target="_blank" class="cl">LinkedIn &#8599;</a>
+      <a href="https://github.com/nuelheran" target="_blank" class="cl">GitHub &#8599;</a>
+      <a href="https://instagram.com/nmanuelnicholas/" target="_blank" class="cl">Instagram &#8599;</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="fc">&copy; 2025 Manuel Nicholas<span>.</span> All rights reserved.</div>
+  <div class="fl">
+    <a href="#hero">Back to top &uarr;</a>
+    <a href="https://github.com/nuelheran" target="_blank">GitHub</a>
+    <a href="https://linkedin.com/in/manuelnicholas/" target="_blank">LinkedIn</a>
+  </div>
+</footer>
+
+<script>
+// Custom cursor and navigation
+const c=document.getElementById('cur'),r=document.getElementById('cur2');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;c.style.left=mx+'px';c.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;r.style.left=rx+'px';r.style.top=ry+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('a,button,.pc,.tag,.stat,.cert-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{c.classList.add('big');r.classList.add('big');});
+  el.addEventListener('mouseleave',()=>{c.classList.remove('big');r.classList.remove('big');});
+});
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('s',scrollY>50));
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('on'),i*60);obs.unobserve(e.target);}});
+},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+let navOpen=false;
+function toggleNav(){
+  navOpen=!navOpen;
+  const nr=document.querySelector('.nav-r');
+  if(navOpen){Object.assign(nr.style,{display:'flex',flexDirection:'column',position:'fixed',top:'58px',left:0,right:0,background:'rgba(8,11,16,.97)',backdropFilter:'blur(24px)',padding:'2rem 5vw',borderBottom:'1px solid rgba(99,179,237,.08)',gap:'1.5rem',zIndex:499});}
+  else{nr.style.display='';}
+}
+document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',()=>{if(navOpen)toggleNav();}));
+
+// ── THREE.JS 3D SCENE WITH RAYCASTER FOR OBJECT DRAG ──
+(function(){
+  const canvas = document.getElementById('three-canvas');
+  if(!canvas) return;
+  
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x000000, 0);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
+  camera.position.set(0, 1, 6);
+  camera.lookAt(0, 0, 0);
+
+  // Lighting
+  const ambientLight = new THREE.AmbientLight(0x404060);
+  scene.add(ambientLight);
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+  directionalLight.position.set(1, 2, 1);
+  scene.add(directionalLight);
+  const backLight = new THREE.PointLight(0x3366aa, 0.4);
+  backLight.position.set(0, 1, -2);
+  scene.add(backLight);
+
+  // Main group that will be rotated
+  const mainGroup = new THREE.Group();
+  scene.add(mainGroup);
+  
+  // Main object: Torus Knot
+  const knotGeo = new THREE.TorusKnotGeometry(1.2, 0.28, 180, 24, 3, 4);
+  const knotMat = new THREE.MeshStandardMaterial({
+    color: 0x63b3ed,
+    emissive: 0x1a4a7a,
+    roughness: 0.3,
+    metalness: 0.7,
+    emissiveIntensity: 0.4
+  });
+  const knotMesh = new THREE.Mesh(knotGeo, knotMat);
+  mainGroup.add(knotMesh);
+  
+  // Wireframe overlay
+  const wireMat = new THREE.MeshBasicMaterial({
+    color: 0x63b3ed,
+    wireframe: true,
+    transparent: true,
+    opacity: 0.25
+  });
+  const wireMesh = new THREE.Mesh(knotGeo, wireMat);
+  mainGroup.add(wireMesh);
+  
+  // Glow effect
+  const glowGeo = new THREE.TorusKnotGeometry(1.35, 0.32, 180, 24, 3, 4);
+  const glowMat = new THREE.MeshBasicMaterial({
+    color: 0x63b3ed,
+    transparent: true,
+    opacity: 0.08,
+    side: THREE.BackSide
+  });
+  const glowMesh = new THREE.Mesh(glowGeo, glowMat);
+  mainGroup.add(glowMesh);
+  
+  // Inner octahedron
+  const octGeo = new THREE.OctahedronGeometry(0.65);
+  const octMat = new THREE.MeshStandardMaterial({
+    color: 0xf6c90e,
+    emissive: 0x4a3a00,
+    roughness: 0.4,
+    metalness: 0.6,
+    emissiveIntensity: 0.3
+  });
+  const octMesh = new THREE.Mesh(octGeo, octMat);
+  mainGroup.add(octMesh);
+  
+  const octWireMat = new THREE.MeshBasicMaterial({
+    color: 0xf6c90e,
+    wireframe: true,
+    transparent: true,
+    opacity: 0.5
+  });
+  const octWire = new THREE.Mesh(octGeo, octWireMat);
+  mainGroup.add(octWire);
+  
+  // Floating particles
+  const particleCount = 400;
+  const particleGeometry = new THREE.BufferGeometry();
+  const particlePositions = new Float32Array(particleCount * 3);
+  const particleData = [];
+  
+  for (let i = 0; i < particleCount; i++) {
+    const radius = 1.8 + Math.random() * 1.5;
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    particlePositions[i*3] = radius * Math.sin(phi) * Math.cos(theta);
+    particlePositions[i*3+1] = radius * Math.sin(phi) * Math.sin(theta);
+    particlePositions[i*3+2] = radius * Math.cos(phi);
+    particleData.push({
+      radius: radius,
+      theta: theta,
+      phi: phi,
+      speed: 0.002 + Math.random() * 0.005
+    });
+  }
+  particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+  const particleMaterial = new THREE.PointsMaterial({
+    color: 0x63b3ed,
+    size: 0.03,
+    transparent: true,
+    opacity: 0.6,
+    blending: THREE.AdditiveBlending
+  });
+  const particles = new THREE.Points(particleGeometry, particleMaterial);
+  mainGroup.add(particles);
+  
+  // Gold particles
+  const goldParticleCount = 150;
+  const goldParticleGeometry = new THREE.BufferGeometry();
+  const goldPositions = new Float32Array(goldParticleCount * 3);
+  const goldData = [];
+  for (let i = 0; i < goldParticleCount; i++) {
+    const radius = 2.0 + Math.random() * 1.2;
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    goldPositions[i*3] = radius * Math.sin(phi) * Math.cos(theta);
+    goldPositions[i*3+1] = radius * Math.sin(phi) * Math.sin(theta);
+    goldPositions[i*3+2] = radius * Math.cos(phi);
+    goldData.push({
+      radius: radius,
+      theta: theta,
+      phi: phi,
+      speed: 0.001 + Math.random() * 0.004
+    });
+  }
+  goldParticleGeometry.setAttribute('position', new THREE.BufferAttribute(goldPositions, 3));
+  const goldParticleMaterial = new THREE.PointsMaterial({
+    color: 0xf6c90e,
+    size: 0.025,
+    transparent: true,
+    opacity: 0.5,
+    blending: THREE.AdditiveBlending
+  });
+  const goldParticles = new THREE.Points(goldParticleGeometry, goldParticleMaterial);
+  mainGroup.add(goldParticles);
+  
+  // Orbit rings
+  const ringGeo1 = new THREE.TorusGeometry(1.65, 0.008, 64, 200);
+  const ringMat1 = new THREE.MeshStandardMaterial({ color: 0x63b3ed, emissive: 0x1a4a7a, emissiveIntensity: 0.2 });
+  const ring1 = new THREE.Mesh(ringGeo1, ringMat1);
+  ring1.rotation.x = Math.PI / 2;
+  ring1.rotation.z = Math.PI / 4;
+  mainGroup.add(ring1);
+  
+  const ringGeo2 = new THREE.TorusGeometry(1.9, 0.006, 64, 200);
+  const ringMat2 = new THREE.MeshStandardMaterial({ color: 0xf6c90e, emissive: 0x4a3a00, emissiveIntensity: 0.15 });
+  const ring2 = new THREE.Mesh(ringGeo2, ringMat2);
+  ring2.rotation.y = Math.PI / 3;
+  ring2.rotation.x = Math.PI / 3;
+  mainGroup.add(ring2);
+  
+  const ringGeo3 = new THREE.TorusGeometry(2.1, 0.004, 64, 200);
+  const ringMat3 = new THREE.MeshStandardMaterial({ color: 0xbee3f8, emissive: 0x336699, emissiveIntensity: 0.1 });
+  const ring3 = new THREE.Mesh(ringGeo3, ringMat3);
+  ring3.rotation.z = Math.PI / 2;
+  ring3.rotation.x = Math.PI / 6;
+  mainGroup.add(ring3);
+  
+  // ── DRAG INTERACTION WITH RAYCASTER (Bisa drag langsung pada object 3D) ──
+  let isDragging = false;
+  let previousMousePosition = { x: 0, y: 0 };
+  
+  // Current rotation values
+  let currentRotationX = 0;
+  let currentRotationY = 0;
+  
+  let autoRotate = true;
+  let autoRotateSpeedX = 0.003;
+  let autoRotateSpeedY = 0.004;
+  let autoRotateTimeout = null;
+  
+  // Setup raycaster
+  const raycaster = new THREE.Raycaster();
+  const clickableObjects = [knotMesh, wireMesh, octMesh, octWire]; // Objects that can be clicked to drag
+  
+  // Apply current rotation to group
+  function updateRotation() {
+    mainGroup.rotation.x = currentRotationX;
+    mainGroup.rotation.y = currentRotationY;
+  }
+  
+  // Check if mouse is over any clickable 3D object
+  function isMouseOverObject(mouseX, mouseY) {
+    // Convert mouse coordinates to normalized device coordinates (-1 to +1)
+    const rect = canvas.getBoundingClientRect();
+    const ndcX = ((mouseX - rect.left) / rect.width) * 2 - 1;
+    const ndcY = -((mouseY - rect.top) / rect.height) * 2 + 1;
+    
+    raycaster.setFromCamera(new THREE.Vector2(ndcX, ndcY), camera);
+    const intersects = raycaster.intersectObjects(clickableObjects);
+    
+    return intersects.length > 0;
+  }
+  
+  // Mouse/Touch event handlers
+  const getCanvasCoords = (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.clientX !== undefined ? e.clientX : e.touches[0].clientX;
+    const clientY = e.clientY !== undefined ? e.clientY : e.touches[0].clientY;
+    return { x: clientX - rect.left, y: clientY - rect.top };
+  };
+  
+  const onDragStart = (e) => {
+    // Get mouse position
+    const coords = getCanvasCoords(e);
+    
+    // Check if user clicked on the 3D object OR anywhere on canvas
+    // For better UX, we allow drag from anywhere on canvas, but also detect object click
+    const isOverObject = isMouseOverObject(coords.x + canvas.getBoundingClientRect().left, coords.y + canvas.getBoundingClientRect().top);
+    
+    // Allow drag from anywhere on canvas (not just object)
+    // This provides better user experience
+    e.preventDefault();
+    isDragging = true;
+    
+    // Stop auto-rotate
+    if (autoRotateTimeout) clearTimeout(autoRotateTimeout);
+    autoRotate = false;
+    
+    previousMousePosition = { x: coords.x, y: coords.y };
+    canvas.style.cursor = 'grabbing';
+  };
+  
+  const onDragMove = (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const coords = getCanvasCoords(e);
+    const deltaX = coords.x - previousMousePosition.x;
+    const deltaY = coords.y - previousMousePosition.y;
+    
+    if (deltaX !== 0 || deltaY !== 0) {
+      // Update rotation values (no limits!)
+      currentRotationY += deltaX * 0.008;
+      currentRotationX += deltaY * 0.006;
+      
+      updateRotation();
+    }
+    
+    previousMousePosition = { x: coords.x, y: coords.y };
+  };
+  
+  const onDragEnd = () => {
+    if (!isDragging) return;
+    isDragging = false;
+    canvas.style.cursor = 'grab';
+    // Resume auto-rotation after 3 seconds
+    if (autoRotateTimeout) clearTimeout(autoRotateTimeout);
+    autoRotateTimeout = setTimeout(() => { 
+      autoRotate = true; 
+    }, 3000);
+  };
+  
+  // Mouse events
+  canvas.addEventListener('mousedown', onDragStart);
+  window.addEventListener('mousemove', onDragMove);
+  window.addEventListener('mouseup', onDragEnd);
+  
+  // Touch events for mobile
+  canvas.addEventListener('touchstart', onDragStart, { passive: false });
+  window.addEventListener('touchmove', onDragMove, { passive: false });
+  window.addEventListener('touchend', onDragEnd);
+  
+  canvas.style.cursor = 'grab';
+  
+  // Window resize handler
+  function handleResize() {
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    renderer.setSize(width, height, false);
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', handleResize);
+  handleResize();
+  
+  // Auto rotation and animation
+  let time = 0;
+  
+  function animate() {
+    requestAnimationFrame(animate);
+    time += 0.016;
+    
+    if (autoRotate && !isDragging) {
+      // Continue rotation from current position (no reset!)
+      currentRotationY += autoRotateSpeedY;
+      currentRotationX += autoRotateSpeedX;
+      updateRotation();
+    }
+    
+    // Animate inner octahedron (rotates independently)
+    octMesh.rotation.x = time * 0.8;
+    octMesh.rotation.y = time * 1.2;
+    octWire.rotation.x = time * 0.8;
+    octWire.rotation.y = time * 1.2;
+    
+    // Animate rings
+    ring1.rotation.z += 0.003;
+    ring1.rotation.x += 0.002;
+    ring2.rotation.y += 0.004;
+    ring2.rotation.x += 0.002;
+    ring3.rotation.z += 0.002;
+    ring3.rotation.y += 0.003;
+    
+    // Animate particles
+    const positions = particleGeometry.attributes.position.array;
+    for (let i = 0; i < particleCount; i++) {
+      const p = particleData[i];
+      p.theta += p.speed;
+      positions[i*3] = p.radius * Math.sin(p.phi) * Math.cos(p.theta);
+      positions[i*3+1] = p.radius * Math.sin(p.phi) * Math.sin(p.theta);
+      positions[i*3+2] = p.radius * Math.cos(p.phi);
+    }
+    particleGeometry.attributes.position.needsUpdate = true;
+    
+    const goldPos = goldParticleGeometry.attributes.position.array;
+    for (let i = 0; i < goldParticleCount; i++) {
+      const p = goldData[i];
+      p.theta += p.speed;
+      goldPos[i*3] = p.radius * Math.sin(p.phi) * Math.cos(p.theta);
+      goldPos[i*3+1] = p.radius * Math.sin(p.phi) * Math.sin(p.theta);
+      goldPos[i*3+2] = p.radius * Math.cos(p.phi);
+    }
+    goldParticleGeometry.attributes.position.needsUpdate = true;
+    
+    // Pulsing effect
+    const intensity = 0.3 + Math.sin(time * 3) * 0.1;
+    knotMat.emissiveIntensity = intensity;
+    
+    renderer.render(scene, camera);
+  }
+  
+  animate();
+})();
+</script>
+</body>
+</html>
