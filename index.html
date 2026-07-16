@@ -972,11 +972,8 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',
     const coords = getCanvasCoords(e);
     
     // Check if user clicked on the 3D object OR anywhere on canvas
-    // For better UX, we allow drag from anywhere on canvas, but also detect object click
     const isOverObject = isMouseOverObject(coords.x + canvas.getBoundingClientRect().left, coords.y + canvas.getBoundingClientRect().top);
     
-    // Allow drag from anywhere on canvas (not just object)
-    // This provides better user experience
     e.preventDefault();
     isDragging = true;
     
