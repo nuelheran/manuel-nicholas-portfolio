@@ -560,6 +560,21 @@ footer{padding:1.8rem 5vw;border-top:1px solid var(--border);display:flex;align-
         <div class="pc-links"><a href="https://github.com/nuelheran/KasFlow" target="_blank" class="pl" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></a><a href="https://kasflow.wuaze.com/" target="_blank" class="pl">DEMO</a></div>
       </div>
     </div>
+    <div class="pc">
+      <div class="pc-num">Project 10</div>
+      <div class="pc-name">SerbaTools — All-in-One Utility Tools</div>
+      <p class="pc-desc">A collection of 12 free everyday tools in one place — bilingual (ID/EN), no signup, and running 100% in the browser. No data is ever sent to any server.</p>
+      <ul class="pc-list">
+        <li>12 utilities in one place: word counter, case converter, password generator, QR code, unit converter, percentage calculator, split bill, BMI, age, name picker, Pomodoro, and loan calculator</li>
+        <li>Bilingual Indonesian/English with a one-click toggle saved in the browser</li>
+        <li>Liquid glass (glassmorphism) design; each tool has its own URL (e.g. <code>#/splitbill</code>) for easy sharing</li>
+        <li>Single HTML file — no build step, no local dependencies, crypto-secure password generation on-device</li>
+      </ul>
+      <div class="pc-foot">
+        <div class="stacks"><span class="st">HTML/CSS/JS</span><span class="st">Vanilla JS</span><span class="st">qrcodejs</span><span class="st">Glassmorphism UI</span><span class="st">Netlify</span></div>
+        <div class="pc-links"><a href="https://github.com/nuelheran/SerbaTools" target="_blank" class="pl" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></a><a href="https://serbatools.netlify.app/" target="_blank" class="pl">DEMO</a></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -972,8 +987,11 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',
     const coords = getCanvasCoords(e);
     
     // Check if user clicked on the 3D object OR anywhere on canvas
+    // For better UX, we allow drag from anywhere on canvas, but also detect object click
     const isOverObject = isMouseOverObject(coords.x + canvas.getBoundingClientRect().left, coords.y + canvas.getBoundingClientRect().top);
     
+    // Allow drag from anywhere on canvas (not just object)
+    // This provides better user experience
     e.preventDefault();
     isDragging = true;
     
